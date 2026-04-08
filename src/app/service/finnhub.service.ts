@@ -136,10 +136,14 @@ export class FinnhubService {
     return forkJoin(symbols.map((symbol) => this.getQuote(symbol)));
   }
 
+  private roundToTwoDecimals(value: number): number {
+    return Math.round((value + Number.EPSILON) * 100) / 100;
+  }
+
   private mapTrade(trade: FinnhubTradeRaw): StockTrade {
     return {
       conditions: trade.c,
-      price: trade.p,
+      price: this.roundToTwoDecimals(trade.p),
       symbol: trade.s,
       timestamp: trade.t,
       volume: trade.v,
@@ -147,17 +151,19 @@ export class FinnhubService {
   }
 
   private mapQuote(quote: FinnhubQuoteRaw, symbol: string): StockQuote {
+    const change = this.roundToTwoDecimals(quote.d);
+
     return {
-      price: quote.c,
-      change: quote.d,
-      percentChange: quote.dp,
-      high: quote.h,
-      low: quote.l,
-      open: quote.o,
-      previousClose: quote.pc,
+      price: this.roundToTwoDecimals(quote.c),
+      change,
+      percentChange: this.roundToTwoDecimals(quote.dp),
+      high: this.roundToTwoDecimals(quote.h),
+      low: this.roundToTwoDecimals(quote.l),
+      open: this.roundToTwoDecimals(quote.o),
+      previousClose: this.roundToTwoDecimals(quote.pc),
       timestamp: quote.t,
       symbol: symbol,
-      state: quote.d > 0 ? 'up' : quote.d < 0 ? 'down' : 'same',
+      state: change > 0 ? 'up' : change < 0 ? 'down' : 'same',
     };
   }
 }

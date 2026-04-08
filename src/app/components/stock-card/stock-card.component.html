@@ -40,9 +40,7 @@
             <mat-slide-toggle (change)="toggleSocketSubs($event.checked)" [(ngModel)]="isChecked"
                 class="stock-card__toggle">
                 <span class="stock-card__toggle--{{isChecked ? 'on' : 'off'}}">
-                    {{isChecked ?
-                    'ON' :
-                    'OFF'}}
+                    {{isChecked ? 'ON' : 'OFF'}}
                 </span>
             </mat-slide-toggle>
         </div>
