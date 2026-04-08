@@ -1,4 +1,4 @@
-<div class="stock-card stock-card--{{card()?.state}}">
+<div class="stock-card stock-card--{{isChecked ? card()?.state : 'off'}}">
 
     <div class="stock-card__header">
         <h3 class="stock-card__title">{{card()?.symbol}}</h3>
