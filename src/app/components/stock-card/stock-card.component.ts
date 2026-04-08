@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, effect, inject, input, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, model, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FinnhubService } from '../../service/finnhub.service';
@@ -20,7 +20,7 @@ export class StockCardComponent {
   private static readonly FLASH_DURATION_MS = 1200;
 
   isChecked = true;
-  card = input.required<StockQuote>();
+  card = model.required<StockQuote>();
 
   isFlashing = signal(false);
 
@@ -64,8 +64,15 @@ export class StockCardComponent {
     });
   }
 
-  toggleSocketSubs(value: boolean): void {
-    this.stockService[(value ? 'addSymbol' : 'removeSymbol')](this.card()?.symbol);
+  toggleSocketSubs(checked: boolean): void {
+    if (checked) {
+      this.stockService.getQuote(this.card()?.symbol).subscribe((quote) => {
+        this.card.set(quote);
+        this.stockService.addSymbol(this.card()?.symbol);
+      });
+    } else {
+      this.stockService.removeSymbol(this.card()?.symbol);
+    }
   }
 
 
