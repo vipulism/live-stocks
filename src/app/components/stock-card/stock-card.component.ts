@@ -17,28 +17,32 @@ import { StockQuote, StockTrade } from '../../service/finnhub.types';
  */
 export class StockCardComponent implements OnInit {
 
+  private static readonly FLASH_DURATION_MS = 1200;
+
   isChecked = true;
   card = input.required<StockQuote>();
 
   isFlashing = signal(false);
 
   private readonly destroyRef = inject(DestroyRef);
-  private previousState: StockQuote['state'] | null = null;
+  private previousPrice: number | null = null;
   private flashTimeout: ReturnType<typeof setTimeout> | null = null;
+  private flashFrame: number | null = null;
 
 
   constructor() {
 
     effect(() => {
-      const state = this.card()?.state;
-      if (!state) return;
-      if (this.previousState !== null && this.previousState !== state) {
+      const price = this.card()?.price;
+      if (price == null) return;
+      if (this.previousPrice !== null && this.previousPrice !== price) {
         this.triggerFlash();
       }
-      this.previousState = state;
+      this.previousPrice = price;
     });
     this.destroyRef.onDestroy(() => {
       if (this.flashTimeout) clearTimeout(this.flashTimeout);
+      if (this.flashFrame !== null) cancelAnimationFrame(this.flashFrame);
     });
 
   }
@@ -49,11 +53,18 @@ export class StockCardComponent implements OnInit {
   }
 
   private triggerFlash(): void {
-    this.isFlashing.set(false); // restart animation if already active
-    queueMicrotask(() => {
+    this.isFlashing.set(false);
+
+    // Wait for a paint frame so CSS animation can restart on rapid live updates.
+    if (this.flashFrame !== null) cancelAnimationFrame(this.flashFrame);
+    this.flashFrame = requestAnimationFrame(() => {
       this.isFlashing.set(true);
       if (this.flashTimeout) clearTimeout(this.flashTimeout);
-      this.flashTimeout = setTimeout(() => this.isFlashing.set(false), 500);
+      this.flashTimeout = setTimeout(
+        () => this.isFlashing.set(false),
+        StockCardComponent.FLASH_DURATION_MS
+      );
+      this.flashFrame = null;
     });
   }
 

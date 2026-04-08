@@ -1,5 +1,5 @@
 <div class="dashboard">
-    @for (card of cards(); track card) {
+    @for (card of cards(); track card.symbol) {
     <app-stock-card [card]="card"></app-stock-card>
     }
 </div>

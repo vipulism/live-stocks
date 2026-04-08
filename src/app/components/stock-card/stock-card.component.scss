@@ -77,11 +77,12 @@
   
     &__value {
       font-weight: 600;
-      transition: color 240ms ease-in-out;
+      transition: color 240ms ease-in-out, background-color 240ms ease-in-out;
       border-radius: 4px;
+      padding: 2px 6px;
 
       &--flash {
-        animation: priceFlash 500ms ease-out;
+        animation: priceFlash 1200ms ease-in-out;
       }
   
       &--up { 
@@ -130,11 +131,39 @@
 
   @keyframes priceFlash {
     0% {
-      color: #facc15; 
-      text-shadow: 0 0 10px rgba(250, 204, 21, 0.75);
+      color: #111827;
+      background-color: #fde047;
+      box-shadow: 0 0 0 2px rgba(253, 224, 71, 0.45), 0 0 14px rgba(253, 224, 71, 0.7);
+      text-shadow: none;
+    }
+    20% {
+      color: #111827;
+      background-color: #facc15;
+      box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.35), 0 0 10px rgba(250, 204, 21, 0.55);
+      text-shadow: none;
+    }
+    35% {
+      color: inherit;
+      background-color: transparent;
+      box-shadow: none;
+      text-shadow: none;
+    }
+    55% {
+      color: #111827;
+      background-color: #fde047;
+      box-shadow: 0 0 0 2px rgba(253, 224, 71, 0.45), 0 0 14px rgba(253, 224, 71, 0.7);
+      text-shadow: none;
+    }
+    75% {
+      color: #111827;
+      background-color: #facc15;
+      box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.35), 0 0 10px rgba(250, 204, 21, 0.55);
+      text-shadow: none;
     }
     100% {
       color: inherit;
+      background-color: transparent;
+      box-shadow: none;
       text-shadow: none;
     }
   }
