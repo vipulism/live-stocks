@@ -1,0 +1,127 @@
+/* Dashboard Layout */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    padding: 16px;
+    background: #f5f6f8;
+  }
+  
+  /* Stock Card Block */
+  .stock-card {
+    max-width: 150px;
+    border-radius: 12px;
+    padding: 16px;
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  
+    /* STATES */
+    &--up {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+    }
+  
+    &--down {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+    }
+  
+    &--off {
+      background: #9ca3af;
+      color: #e5e7eb;
+    }
+  
+    &__header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  
+    &__title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+  
+    &__toggle {
+      border: none;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+  
+      &--on {
+        color: #e5e7eb;
+      }
+  
+      &--off {
+        color: #4b5563;
+        
+      }
+    }
+  
+    /* BODY */
+    &__body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+  
+    &__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+  
+    &__label {
+      opacity: 0.85;
+    }
+  
+    &__value {
+      font-weight: 600;
+  
+      &--up {
+        color: #bbf7d0;
+      }
+  
+      &--down {
+        color: #fecaca;
+      }
+    }
+  
+    /* EXTRA (Desktop only) */
+    &__extra, &__footer {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    &__footer{
+        text-align: center;
+    }
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .stock-card {
+      padding: 14px;
+  
+      &__title {
+        font-size: 16px;
+      }
+  
+      &__row {
+        font-size: 13px;
+      }
+  
+      &__extra {
+        display: none; // hide 52-week data on mobile
+      }
+    }
+  }

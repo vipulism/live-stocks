@@ -1,0 +1,49 @@
+<div class="stock-card stock-card--up">
+
+    <div class="stock-card__header">
+        <h3 class="stock-card__title">AAPL</h3>
+    </div>
+
+    <div class="stock-card__body">
+
+        <div class="stock-card__row">
+            <span class="stock-card__label">Price</span>
+            <span class="stock-card__value stock-card__value--up">
+                $189.45 ▲
+            </span>
+        </div>
+
+        <div class="stock-card__row">
+            <span class="stock-card__label">High</span>
+            <span class="stock-card__value">$195.20</span>
+        </div>
+
+        <div class="stock-card__row">
+            <span class="stock-card__label">Low</span>
+            <span class="stock-card__value">$182.50</span>
+        </div>
+
+        <div class="stock-card__extra">
+            <div class="stock-card__row">
+                <span class="stock-card__label">52W High</span>
+                <span class="stock-card__value">$220.00</span>
+            </div>
+
+            <div class="stock-card__row">
+                <span class="stock-card__label">52W Low</span>
+                <span class="stock-card__value">$140.00</span>
+            </div>
+        </div>
+
+        <div class="stock-card__footer">
+            <mat-slide-toggle [(ngModel)]="isChecked" class="stock-card__toggle">
+                <span [class.stock-card__toggle--on]="isChecked" [class.stock-card__toggle--off]="!isChecked">
+                    {{isChecked ?
+                    'ON' :
+                    'OFF'}}
+                </span>
+            </mat-slide-toggle>
+        </div>
+
+    </div>
+</div>
