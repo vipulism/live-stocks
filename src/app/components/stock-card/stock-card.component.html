@@ -1,26 +1,27 @@
-<div class="stock-card stock-card--up">
+<div class="stock-card stock-card--{{card()?.state}}">
 
     <div class="stock-card__header">
-        <h3 class="stock-card__title">AAPL</h3>
+        <h3 class="stock-card__title">{{card()?.symbol}}</h3>
     </div>
 
     <div class="stock-card__body">
 
         <div class="stock-card__row">
             <span class="stock-card__label">Price</span>
-            <span class="stock-card__value stock-card__value--up">
-                $189.45 ▲
+            <span [class.stock-card__value--flash]="isFlashing()"
+                class="stock-card__value stock-card__value--{{card()?.state}}">
+                ${{card()?.price}}
             </span>
         </div>
 
         <div class="stock-card__row">
             <span class="stock-card__label">High</span>
-            <span class="stock-card__value">$195.20</span>
+            <span class="stock-card__value">${{card()?.high}}</span>
         </div>
 
         <div class="stock-card__row">
             <span class="stock-card__label">Low</span>
-            <span class="stock-card__value">$182.50</span>
+            <span class="stock-card__value">${{card()?.low}}</span>
         </div>
 
         <div class="stock-card__extra">
@@ -37,7 +38,7 @@
 
         <div class="stock-card__footer">
             <mat-slide-toggle [(ngModel)]="isChecked" class="stock-card__toggle">
-                <span [class.stock-card__toggle--on]="isChecked" [class.stock-card__toggle--off]="!isChecked">
+                <span class="stock-card__toggle--{{isChecked ? 'on' : 'off'}}">
                     {{isChecked ?
                     'ON' :
                     'OFF'}}

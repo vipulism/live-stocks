@@ -1,36 +1,28 @@
-/* Dashboard Layout */
-.dashboard {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 16px;
-    padding: 16px;
-    background: #f5f6f8;
-  }
+ 
   
   /* Stock Card Block */
   .stock-card {
-    max-width: 150px;
+    min-width: 150px;
     border-radius: 12px;
     padding: 16px;
     color: #fff;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+    transition: background-color 300ms ease, color 300ms ease, box-shadow 300ms ease;
   
     display: flex;
     flex-direction: column;
     gap: 12px;
-  
-    /* STATES */
+
     &--up {
-      background: linear-gradient(135deg, #16a34a, #15803d);
+      background-image: linear-gradient(135deg, #16a34a, #15803d);
     }
   
     &--down {
-      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      background-image: linear-gradient(135deg, #dc2626, #b91c1c);
     }
-  
+    
     &--off {
-      background: #9ca3af;
+      background-image: linear-gradient(135deg, #9ca3af, #6b7280);
       color: #e5e7eb;
     }
   
@@ -85,13 +77,23 @@
   
     &__value {
       font-weight: 600;
+      transition: color 240ms ease-in-out;
+      border-radius: 4px;
+
+      &--flash {
+        animation: priceFlash 500ms ease-out;
+      }
   
-      &--up {
-        color: #bbf7d0;
+      &--up { 
+        &::after {
+          content: '▲';
+        }
       }
   
       &--down {
-        color: #fecaca;
+        &::after {
+          content: '▼';
+        }
       }
     }
   
@@ -123,5 +125,16 @@
       &__extra {
         display: none; // hide 52-week data on mobile
       }
+    }
+  }
+
+  @keyframes priceFlash {
+    0% {
+      color: #facc15; 
+      text-shadow: 0 0 10px rgba(250, 204, 21, 0.75);
+    }
+    100% {
+      color: inherit;
+      text-shadow: none;
     }
   }

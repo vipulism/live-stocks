@@ -1,2 +1,6 @@
-<app-stock-card></app-stock-card>
+<div class="dashboard">
+    @for (card of cards(); track card) {
+    <app-stock-card [card]="card"></app-stock-card>
+    }
+</div>
 <router-outlet />

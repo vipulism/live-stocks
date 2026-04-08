@@ -1,46 +1,112 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { forkJoin, map, Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
+import {
+  FinnhubQuoteRaw,
+  FinnhubTradeMessage,
+  FinnhubTradeMessageRaw,
+  FinnhubTradeRaw,
+  StockQuote,
+  StockTrade,
+} from './finnhub.types';
 
 @Injectable({
   providedIn: 'root',
 })
+/**
+ * Handles Finnhub REST and websocket market data communication.
+ */
 export class FinnhubService {
   private readonly finnhubConfig = environment.finnhub;
+  private socket: WebSocket | null = null;
 
   constructor(private http: HttpClient) { }
 
-  connect(stockSymbols: string[]): Observable<any> {
+  connect(stockSymbols: string[] = []): Observable<FinnhubTradeMessage> {
     return new Observable(observer => {
-      const socket = new WebSocket(
+      this.disconnect();
+
+      this.socket = new WebSocket(
         `${this.finnhubConfig.wsUrl}?token=${this.finnhubConfig.token}`
       );
 
-      socket.onopen = () => {
+      this.socket.onopen = () => {
         stockSymbols.forEach(symbol => {
-          socket.send(JSON.stringify({
+          this.socket?.send(JSON.stringify({
             type: 'subscribe',
-            symbol
+            symbol,
           }));
         });
       };
 
-      socket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        observer.next(data);
+      this.socket.onmessage = (event) => {
+        const data = JSON.parse(event.data) as FinnhubTradeMessageRaw;
+        observer.next({
+          type: data.type,
+          data: data.data?.map((trade) => this.mapTrade(trade)),
+        });
       };
 
-      socket.onerror = (error) => observer.error(error);
-      socket.onclose = () => observer.complete();
+      this.socket.onerror = (error) => observer.error(error);
+      this.socket.onclose = () => {
+        this.socket = null;
+        observer.complete();
+      };
 
-      return () => socket.close();
+      return () => this.disconnect();
     });
   }
 
-  getStockDetails(symbol: string) {
-    return this.http.get(
-      `${this.finnhubConfig.restBaseUrl}/quote?symbol=${symbol}&token=${this.finnhubConfig.token}`
-    );
+
+  disconnect(): void {
+    if (this.socket) {
+      this.socket.close();
+      this.socket = null;
+    }
+  }
+
+
+  getQuote(symbol: string): Observable<StockQuote> {
+    const params = new HttpParams()
+      .set('symbol', symbol)
+      .set('token', this.finnhubConfig.token);
+
+    return this.http.get<FinnhubQuoteRaw>(
+      `${this.finnhubConfig.restBaseUrl}/quote`,
+      { params }
+    ).pipe(map((quote) => ({ ...this.mapQuote(quote, symbol) })));
+  }
+
+  getQuotes(symbols: string[]): Observable<StockQuote[]> {
+    if (symbols.length === 0) {
+      return of([]);
+    }
+    return forkJoin(symbols.map((symbol) => this.getQuote(symbol)));
+  }
+
+  private mapTrade(trade: FinnhubTradeRaw): StockTrade {
+    return {
+      conditions: trade.c,
+      price: trade.p,
+      symbol: trade.s,
+      timestamp: trade.t,
+      volume: trade.v,
+    };
+  }
+
+  private mapQuote(quote: FinnhubQuoteRaw, symbol: string): StockQuote {
+    return {
+      price: quote.c,
+      change: quote.d,
+      percentChange: quote.dp,
+      high: quote.h,
+      low: quote.l,
+      open: quote.o,
+      previousClose: quote.pc,
+      timestamp: quote.t,
+      symbol: symbol,
+      state: quote.d > 0 ? 'up' : quote.d < 0 ? 'down' : 'same',
+    };
   }
 }
