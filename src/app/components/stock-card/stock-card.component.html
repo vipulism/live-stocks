@@ -37,7 +37,8 @@
         </div>
 
         <div class="stock-card__footer">
-            <mat-slide-toggle [(ngModel)]="isChecked" class="stock-card__toggle">
+            <mat-slide-toggle (change)="toggleSocketSubs($event.checked)" [(ngModel)]="isChecked"
+                class="stock-card__toggle">
                 <span class="stock-card__toggle--{{isChecked ? 'on' : 'off'}}">
                     {{isChecked ?
                     'ON' :

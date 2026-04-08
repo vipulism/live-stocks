@@ -15,7 +15,7 @@ import { StockQuote, StockTrade } from '../../service/finnhub.types';
 /**
  * Renders stock data and subscribes to live market updates.
  */
-export class StockCardComponent implements OnInit {
+export class StockCardComponent {
 
   private static readonly FLASH_DURATION_MS = 1200;
 
@@ -30,7 +30,7 @@ export class StockCardComponent implements OnInit {
   private flashFrame: number | null = null;
 
 
-  constructor() {
+  constructor(private stockService: FinnhubService) {
 
     effect(() => {
       const price = this.card()?.price;
@@ -48,10 +48,6 @@ export class StockCardComponent implements OnInit {
   }
 
 
-  ngOnInit(): void {
-
-  }
-
   private triggerFlash(): void {
     this.isFlashing.set(false);
 
@@ -68,6 +64,9 @@ export class StockCardComponent implements OnInit {
     });
   }
 
+  toggleSocketSubs(value: boolean): void {
+    this.stockService[(value ? 'addSymbol' : 'removeSymbol')](this.card()?.symbol);
+  }
 
 
 }
