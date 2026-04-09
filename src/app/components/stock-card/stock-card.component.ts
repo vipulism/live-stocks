@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, effect, inject, model, signal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, model, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FinnhubService } from '../../service/finnhub.service';
@@ -15,7 +15,7 @@ import { StockQuote, StockTrade } from '../../service/finnhub.types';
 /**
  * Renders stock data and subscribes to live market updates.
  */
-export class StockCardComponent {
+export class StockCardComponent implements OnInit {
 
   private static readonly FLASH_DURATION_MS = 1200;
 
@@ -47,6 +47,11 @@ export class StockCardComponent {
 
   }
 
+  ngOnInit(): void {
+    this.stockService.getProfile(this.card()?.symbol).subscribe((profile) => {
+      console.log(profile);
+    });
+  }
 
   private triggerFlash(): void {
     this.isFlashing.set(false);

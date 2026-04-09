@@ -35,7 +35,7 @@ export interface StockTrade {
   volume: number;
 }
 
-export interface StockQuote {
+export interface StockQuote extends FinnhubPriceMetric {
   price: number;
   change: number;
   percentChange: number;
@@ -46,4 +46,28 @@ export interface StockQuote {
   timestamp: number;
   symbol: string;
   state: 'up' | 'down' | 'same';
+}
+
+export interface FinnhubPriceMetricRaw {
+  "52WeekHigh": number;
+  "52WeekLow": number;
+  [key: string]: number | string;
+}
+
+export interface FinnhubPriceMetric {
+  fiftyTwoWeekHigh: number;
+  fiftyTwoWeekLow: number;
+}
+
+
+export interface FinnhubProfileRaw {
+  country: string;
+  currency: string;
+  exchange: string;
+  finnhubIndustry: string;
+  ipo: string;
+  logo: string;
+  marketCapitalization: number;
+  name: string;
+  phone: string;
 }

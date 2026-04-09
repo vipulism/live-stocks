@@ -1,8 +1,10 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { forkJoin, map, Observable, of } from 'rxjs';
+import { catchError, forkJoin, map, mergeMap, Observable, of, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
+  FinnhubPriceMetricRaw,
+  FinnhubProfileRaw,
   FinnhubQuoteRaw,
   FinnhubTradeMessage,
   FinnhubTradeMessageRaw,
@@ -117,16 +119,18 @@ export class FinnhubService {
     this.trackedSymbols.clear();
   }
 
-
   getQuote(symbol: string): Observable<StockQuote> {
     const params = new HttpParams()
       .set('symbol', symbol)
       .set('token', this.finnhubConfig.token);
 
-    return this.http.get<FinnhubQuoteRaw>(
-      `${this.finnhubConfig.restBaseUrl}/quote`,
-      { params }
-    ).pipe(map((quote) => ({ ...this.mapQuote(quote, symbol) })));
+    return this.getPriceMetric(symbol).pipe(
+      mergeMap((priceMetric) => this.http.get<FinnhubQuoteRaw>(
+        `${this.finnhubConfig.restBaseUrl}/quote`,
+        { params }
+      ).pipe(map((quote) => ({ ...this.mapQuote(quote, symbol, priceMetric) })))
+      )
+    );
   }
 
   getQuotes(symbols: string[]): Observable<StockQuote[]> {
@@ -134,6 +138,36 @@ export class FinnhubService {
       return of([]);
     }
     return forkJoin(symbols.map((symbol) => this.getQuote(symbol)));
+  }
+
+  getPriceMetric(symbol: string): Observable<FinnhubPriceMetricRaw> {
+    const params = new HttpParams()
+      .set('symbol', symbol)
+      .set('token', this.finnhubConfig.token);
+
+    return this.http.get<FinnhubPriceMetricRaw>(
+      `${this.finnhubConfig.restBaseUrl}/stock/price-metric`,
+      { params }
+    ).pipe(
+      catchError((err: unknown) => {
+        if (err instanceof HttpErrorResponse && err.status === 403) {
+          // fallback to mock data if the Premium API is access limit exceeded
+          return of(this.mockPriceMetric());
+        }
+        return throwError(() => err);
+      })
+    );
+  }
+
+  getProfile(symbol: string): Observable<FinnhubProfileRaw> {
+    const params = new HttpParams()
+      .set('symbol', symbol)
+      .set('token', this.finnhubConfig.token);
+
+    return this.http.get<FinnhubProfileRaw>(
+      `${this.finnhubConfig.restBaseUrl}/stock/profile2`,
+      { params }
+    );
   }
 
   private roundToTwoDecimals(value: number): number {
@@ -150,7 +184,7 @@ export class FinnhubService {
     };
   }
 
-  private mapQuote(quote: FinnhubQuoteRaw, symbol: string): StockQuote {
+  private mapQuote(quote: FinnhubQuoteRaw, symbol: string, priceMetric: FinnhubPriceMetricRaw): StockQuote {
     const change = this.roundToTwoDecimals(quote.d);
 
     return {
@@ -164,6 +198,13 @@ export class FinnhubService {
       timestamp: quote.t,
       symbol: symbol,
       state: change > 0 ? 'up' : change < 0 ? 'down' : 'same',
+      fiftyTwoWeekHigh: priceMetric["52WeekHigh"],
+      fiftyTwoWeekLow: priceMetric["52WeekLow"],
     };
+  }
+
+
+  private mockPriceMetric(): FinnhubPriceMetricRaw {
+    return { '52WeekHigh': 100, '52WeekLow': 50 };
   }
 }
