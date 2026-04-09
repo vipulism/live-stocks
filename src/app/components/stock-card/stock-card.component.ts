@@ -14,7 +14,7 @@ import { StockQuote } from '../../services/finnhub.types';
 /**
  * Renders stock data and subscribes to live market updates.
  */
-export class StockCardComponent implements OnInit {
+export class StockCardComponent {
 
   private static readonly FLASH_DURATION_MS = 1200;
 
@@ -44,12 +44,6 @@ export class StockCardComponent implements OnInit {
       if (this.flashFrame !== null) cancelAnimationFrame(this.flashFrame);
     });
 
-  }
-
-  ngOnInit(): void {
-    this.stockService.getProfile(this.stock()?.symbol).subscribe((profile) => {
-      console.log(profile);
-    });
   }
 
   private triggerFlash(): void {

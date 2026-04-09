@@ -159,17 +159,6 @@ export class FinnhubService {
     );
   }
 
-  getProfile(symbol: string): Observable<FinnhubProfileRaw> {
-    const params = new HttpParams()
-      .set('symbol', symbol)
-      .set('token', this.finnhubConfig.token);
-
-    return this.http.get<FinnhubProfileRaw>(
-      `${this.finnhubConfig.restBaseUrl}/stock/profile2`,
-      { params }
-    );
-  }
-
   private roundToTwoDecimals(value: number): number {
     return Math.round((value + Number.EPSILON) * 100) / 100;
   }
