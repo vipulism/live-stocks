@@ -20,7 +20,7 @@ export class StockCardComponent implements OnInit {
   private static readonly FLASH_DURATION_MS = 1200;
 
   isChecked = true;
-  card = model.required<StockQuote>();
+  stock = model.required<StockQuote>();
 
   isFlashing = signal(false);
 
@@ -33,7 +33,7 @@ export class StockCardComponent implements OnInit {
   constructor(private stockService: FinnhubService) {
 
     effect(() => {
-      const price = this.card()?.price;
+      const price = this.stock()?.price;
       if (price == null) return;
       if (this.previousPrice !== null && this.previousPrice !== price) {
         this.triggerFlash();
@@ -48,7 +48,7 @@ export class StockCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.stockService.getProfile(this.card()?.symbol).subscribe((profile) => {
+    this.stockService.getProfile(this.stock()?.symbol).subscribe((profile) => {
       console.log(profile);
     });
   }
@@ -70,13 +70,18 @@ export class StockCardComponent implements OnInit {
   }
 
   toggleSocketSubs(checked: boolean): void {
+    this.stock.update(stock => ({
+      ...stock,
+      disabled: !checked
+    }));
+
     if (checked) {
-      this.stockService.getQuote(this.card()?.symbol).subscribe((quote) => {
-        this.card.set(quote);
-        this.stockService.addSymbol(this.card()?.symbol);
+      this.stockService.getQuote(this.stock()?.symbol).subscribe((quote) => {
+        this.stock.set({ ...quote, disabled: !checked });
+        this.stockService.addSymbol(this.stock()?.symbol);
       });
     } else {
-      this.stockService.removeSymbol(this.card()?.symbol);
+      this.stockService.removeSymbol(this.stock()?.symbol);
     }
   }
 

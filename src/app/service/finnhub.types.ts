@@ -36,6 +36,7 @@ export interface StockTrade {
 }
 
 export interface StockQuote extends FinnhubPriceMetric {
+  disabled?: boolean;
   price: number;
   change: number;
   percentChange: number;

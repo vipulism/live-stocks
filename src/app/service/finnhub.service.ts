@@ -200,6 +200,7 @@ export class FinnhubService {
       state: change > 0 ? 'up' : change < 0 ? 'down' : 'same',
       fiftyTwoWeekHigh: priceMetric["52WeekHigh"],
       fiftyTwoWeekLow: priceMetric["52WeekLow"],
+
     };
   }
 
