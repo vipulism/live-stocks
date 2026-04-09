@@ -2,9 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, effect, inject, model, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { FinnhubService } from '../../service/finnhub.service';
-import { filter, map } from 'rxjs/operators';
-import { StockQuote, StockTrade } from '../../service/finnhub.types';
+import { FinnhubService } from '../../services/finnhub.service';
+import { StockQuote } from '../../services/finnhub.types';
 
 @Component({
   selector: 'app-stock-card',

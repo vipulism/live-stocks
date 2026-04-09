@@ -1,10 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { StockCardComponent } from './components/stock-card/stock-card.component';
-import { FinnhubService } from './service/finnhub.service';
+import { FinnhubService } from './services/finnhub.service';
 import { filter, map } from 'rxjs/operators';
-import { StockQuote, StockTrade } from './service/finnhub.types';
-import { MockService } from './service/mock.service';
+import { StockQuote, StockTrade } from './services/finnhub.types';
+import { MockService } from './services/mock.service';
 import { Subscription } from 'rxjs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +11,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, StockCardComponent, MatSlideToggleModule, CommonModule, FormsModule],
+  imports: [StockCardComponent, MatSlideToggleModule, CommonModule, FormsModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
