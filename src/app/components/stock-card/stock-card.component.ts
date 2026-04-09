@@ -75,12 +75,12 @@ export class StockCardComponent implements OnInit {
     }));
 
     if (checked) {
-      this.stockService.getQuote(this.stock()?.symbol).subscribe((quote) => {
+      this.stockService.getQuote(this.stock().symbol).subscribe((quote) => {
         this.stock.set({ ...quote, disabled: !checked });
-        this.stockService.addSymbol(this.stock()?.symbol);
+        this.stockService.addSymbol(this.stock().symbol);
       });
     } else {
-      this.stockService.removeSymbol(this.stock()?.symbol);
+      this.stockService.removeSymbol(this.stock().symbol);
     }
   }
 

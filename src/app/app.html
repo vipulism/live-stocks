@@ -2,7 +2,7 @@
 
     <div class="dashboard__header">
         <h1 class="dashboard__title">Live Stocks ({{useMock() ? 'Mocked' : 'Finnhub'}} API)</h1>
-        Switch APIs: <mat-slide-toggle (change)="toggleStream($event.checked)" [(ngModel)]="useMock"></mat-slide-toggle>
+        Switch APIs: <mat-slide-toggle (change)="toggleStream($event.checked)" [checked]="useMock()"></mat-slide-toggle>
     </div>
     <div class="stocks">
         @for (stock of stockList(); track stock.symbol) {
