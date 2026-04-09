@@ -1,59 +1,98 @@
-# LiveStocks
+# Live Stocks
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.6.
+A real-time stock tracker built with Angular.
+It streams live trade updates via Finnhub WebSocket and supports a mock mode for local/demo usage.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- Real-time stock trade updates
+- Initial quote fetch for stock symbols
+- Toggle between live API data and mock stream
+- Angular Signals-based state updates
+- Material UI toggle for switching data source
 
-```bash
-ng serve
-```
+## Tech Stack
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Angular 21
+- TypeScript
+- RxJS
+- Angular Material
+- Finnhub API (REST + WebSocket)
 
-## Code scaffolding
+## Default Stock Symbols
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- AAPL
+- GOOGL
+- MSFT
+- TSLA
 
-```bash
-ng generate component component-name
-```
+## Prerequisites
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- Node.js (LTS recommended)
+- npm (project uses `npm@11.9.0`)
+- A Finnhub API token for live mode
 
-```bash
-ng generate --help
-```
+## Setup
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+1. Install dependencies:
 
 ```bash
-ng test
+npm install
 ```
 
-## Running end-to-end tests
+2. Configure Finnhub credentials in your environment config (used by `finnhub.service.ts`):
 
-For end-to-end (e2e) testing, run:
+- REST base URL
+- WebSocket URL
+- API token
+
+Common Angular location: `src/environments/environment.ts`.
+
+## Run the App
 
 ```bash
-ng e2e
+npm run start
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+The app runs with Angular dev server (`ng serve`).
 
-## Additional Resources
+## Build
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+npm run build
+```
+
+## Test
+
+```bash
+npm run test
+```
+
+## How Data Works
+
+- **Live mode (`FinnhubService`)**
+  - Fetches initial quotes via REST
+  - Subscribes to trade updates via WebSocket
+- **Mock mode (`MockService`)**
+  - Emits synthetic trade updates on an interval
+  - Useful when API limits are hit or token is unavailable
+
+## Project Structure
+
+```text
+src/app/
+  app.ts
+  app.html
+  components/
+    stock-card/
+  services/
+    finnhub.service.ts
+    mock.service.ts
+    finnhub.types.ts
+```
+
+## Notes
+
+> The app currently starts with mock mode off.
+>
+> If the premium price-metric API returns `403`, a fallback mock metric is used for 52-week values.
