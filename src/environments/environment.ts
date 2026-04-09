@@ -1,6 +1,6 @@
 export const environment = {
   finnhub: {
-    token: 'd7bk4b9r01qgc9t7moqgd7bk4b9r01qgc9t7mor0',
+    token: 'd7bla1hr01qgc9t7qho0d7bla1hr01qgc9t7qhog',
     wsUrl: 'wss://ws.finnhub.io',
     restBaseUrl: 'https://finnhub.io/api/v1',
   },

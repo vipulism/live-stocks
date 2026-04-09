@@ -1,7 +1,7 @@
-<div class="stock-card stock-card--{{isChecked ? card()?.state : 'off'}}">
+<div class="stock-card stock-card--{{isChecked ? card().state : 'off'}}">
 
     <div class="stock-card__header">
-        <h3 class="stock-card__title">{{card()?.symbol}}</h3>
+        <h3 class="stock-card__title">{{card().symbol}}</h3>
     </div>
 
     <div class="stock-card__body">
@@ -9,30 +9,30 @@
         <div class="stock-card__row">
             <span class="stock-card__label">Price</span>
             <span [class.stock-card__value--flash]="isFlashing()"
-                class="stock-card__value stock-card__value--{{card()?.state}}">
-                ${{card()?.price}}
+                class="stock-card__value stock-card__value--{{card().state}}">
+                ${{card().price}}
             </span>
         </div>
 
         <div class="stock-card__row">
             <span class="stock-card__label">High</span>
-            <span class="stock-card__value">${{card()?.high}}</span>
+            <span class="stock-card__value">${{card().high}}</span>
         </div>
 
         <div class="stock-card__row">
             <span class="stock-card__label">Low</span>
-            <span class="stock-card__value">${{card()?.low}}</span>
+            <span class="stock-card__value">${{card().low}}</span>
         </div>
 
         <div class="stock-card__extra">
             <div class="stock-card__row">
                 <span class="stock-card__label">52W High</span>
-                <span class="stock-card__value">${{card()?.fiftyTwoWeekHigh}}</span>
+                <span class="stock-card__value">${{card().fiftyTwoWeekHigh}}</span>
             </div>
 
             <div class="stock-card__row">
                 <span class="stock-card__label">52W Low</span>
-                <span class="stock-card__value">${{card()?.fiftyTwoWeekLow}}</span>
+                <span class="stock-card__value">${{card().fiftyTwoWeekLow}}</span>
             </div>
         </div>
 

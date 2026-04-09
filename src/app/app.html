@@ -1,6 +1,12 @@
 <div class="dashboard">
-    @for (card of cards(); track card.symbol) {
-    <app-stock-card [card]="card"></app-stock-card>
-    }
+
+    <div class="dashboard__header">
+        <h1 class="dashboard__title">Live Stocks (Finnhub API)</h1>
+    </div>
+    <div class="stocks">
+        @for (card of cards(); track card.symbol) {
+        <app-stock-card [card]="card"></app-stock-card>
+        }
+    </div>
 </div>
 <router-outlet />
