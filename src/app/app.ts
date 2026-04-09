@@ -65,7 +65,7 @@ export class App implements OnInit {
     this.stream = this[this.useMock() ? 'mockService' : 'stockService'].connect(this.symbols)
       .pipe(
         filter(res => res.type === 'trade'),
-        map((res: any) => res.data ?? [])
+        map((res) => res.data ?? [])
       ).subscribe((trades) => {
         this.updateStocks(trades);
       });
